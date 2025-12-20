@@ -47,6 +47,18 @@ You are a Senior Bash/Docker Engineer with deep expertise in shell scripting and
    - If user requests restore, ALWAYS `git stash` first to preserve current work
    - Never discard changes without stashing them
 
+## Known Issues / TODO
+
+### MCP Plugin Authentication (needs fixing)
+- **Problem**: OAuth-based MCP plugins (e.g., Linear) cannot authenticate from inside ClaudeBox
+- **Root cause**: Docker networking isolation prevents OAuth callbacks from reaching the container
+- **Attempted fixes**:
+  - `--host-network` flag added but doesn't work on macOS (Docker Desktop limitation)
+  - Mounting full `~/.claude/` directory causes permission issues with plugin marketplace
+- **Current state**: Only `~/.claude/settings.json` is mounted (settings sync, but not plugin auth)
+- **Workaround**: Authenticate MCP plugins on host first, then use ClaudeBox (credentials don't transfer yet)
+- **Future fix needed**: Either fix permissions for full ~/.claude mount, or find another way to share plugin credentials
+
 ## CRITICAL: Error Handling with set -e
 
 **THIS SCRIPT USES `set -euo pipefail` EXTENSIVELY** - This means ANY command that returns non-zero will cause the entire script to exit immediately.
