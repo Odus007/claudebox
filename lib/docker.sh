@@ -145,6 +145,9 @@ run_claudebox_container() {
     # Use host networking if requested (needed for OAuth callbacks)
     if [[ "${HOST_NETWORK:-false}" == "true" ]]; then
         docker_args+=("--network" "host")
+        if [[ "${VERBOSE:-false}" == "true" ]]; then
+            printf "[DEBUG] Using host networking mode\n" >&2
+        fi
     fi
 
     # Always check for tmux socket and mount if available (or create one)
@@ -226,17 +229,9 @@ run_claudebox_container() {
         -v "$PROJECT_PARENT_DIR":/home/$DOCKER_USER/.claudebox
     )
     
-    # Ensure .claude directory exists (per-project)
-    if [[ ! -d "$PROJECT_SLOT_DIR/.claude" ]]; then
-        mkdir -p "$PROJECT_SLOT_DIR/.claude"
-    fi
-
-    docker_args+=(-v "$PROJECT_SLOT_DIR/.claude":/home/$DOCKER_USER/.claude)
-
-    # Mount user's global settings.json with read-write access for synced settings
-    # This overlays on the .claude directory mount, allowing global settings to be shared
-    if [[ -f "$HOME/.claude/settings.json" ]]; then
-        docker_args+=(-v "$HOME/.claude/settings.json":/home/$DOCKER_USER/.claude/settings.json)
+    # Mount user's global ~/.claude directory for shared auth, settings, and plugin credentials
+    if [[ -d "$HOME/.claude" ]]; then
+        docker_args+=(-v "$HOME/.claude":/home/$DOCKER_USER/.claude)
     fi
 
     # Mount .claude.json only if it already exists (from previous session)

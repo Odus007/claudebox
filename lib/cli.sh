@@ -133,6 +133,7 @@ debug_parsed_args() {
         echo "[DEBUG]   Control flags: ${CLI_CONTROL_FLAGS[*]}" >&2
         echo "[DEBUG]   Script command: ${CLI_SCRIPT_COMMAND}" >&2
         echo "[DEBUG]   Pass-through: ${CLI_PASS_THROUGH[*]}" >&2
+        echo "[DEBUG]   HOST_NETWORK: ${HOST_NETWORK:-false}" >&2
     fi
 }
 

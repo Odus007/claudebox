@@ -353,11 +353,10 @@ claudebox rebuild
 ## 🔧 Configuration
 
 ClaudeBox stores data in:
-- `~/.claude/settings.json` - Global Claude Code settings (mounted read-write, synced across all sessions)
+- `~/.claude/` - Global Claude Code directory (mounted read-write, includes settings, auth, and plugin credentials)
 - `~/.claudebox/` - Global ClaudeBox data
 - `~/.claudebox/profiles/` - Per-project profile configurations (*.ini files)
 - `~/.claudebox/<project-name>/` - Project-specific data:
-  - `.claude/` - Project auth state and context
   - `.claude.json` - Project API configuration
   - `.zsh_history` - Shell history
   - `.config/` - Tool configurations
