@@ -319,6 +319,9 @@ claudebox --enable-sudo
 # Disable network firewall (allows all network access)
 claudebox --disable-firewall
 
+# Use host networking (needed for OAuth-based MCP authentication)
+claudebox --host-network
+
 # Skip permission checks
 claudebox --dangerously-skip-permissions
 ```

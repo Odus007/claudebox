@@ -141,7 +141,12 @@ run_claudebox_container() {
             docker_args+=("--rm" "--init")
             ;;
     esac
-    
+
+    # Use host networking if requested (needed for OAuth callbacks)
+    if [[ "${HOST_NETWORK:-false}" == "true" ]]; then
+        docker_args+=("--network" "host")
+    fi
+
     # Always check for tmux socket and mount if available (or create one)
     local tmux_socket=""
     local tmux_socket_dir=""

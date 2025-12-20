@@ -142,6 +142,7 @@ show_help() {
         echo "  --verbose                        Show detailed output"
         echo "  --enable-sudo                    Enable sudo without password"
         echo "  --disable-firewall               Disable network restrictions"
+        echo "  --host-network                   Use host networking (for OAuth)"
         echo
         echo "ClaudeBox Commands:"
         echo "$our_commands"
@@ -170,6 +171,7 @@ show_help() {
         echo "  --verbose                        Show detailed output"
         echo "  --enable-sudo                    Enable sudo without password"
         echo "  --disable-firewall               Disable network restrictions"
+        echo "  --host-network                   Use host networking (for OAuth)"
         echo
         echo "Commands:"
         echo "$our_commands"
@@ -213,6 +215,7 @@ show_full_help() {
   --verbose                        Show detailed output\
   --enable-sudo                    Enable sudo without password\
   --disable-firewall               Disable network restrictions\
+  --host-network                   Use host networking (for OAuth)\
 ' | \
             sed '$ a\
   profiles                        List all available profiles\
