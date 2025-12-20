@@ -53,7 +53,7 @@ You are a Senior Bash/Docker Engineer with deep expertise in shell scripting and
 - **Problem**: OAuth-based MCP plugins (e.g., Linear) cannot authenticate from inside ClaudeBox
 - **Root cause**: Docker networking isolation prevents OAuth callbacks from reaching the container
 - **Attempted fixes**:
-  - `--host-network` flag added but doesn't work on macOS (Docker Desktop limitation)
+  - `--network host` doesn't work on macOS (Docker Desktop runs in a VM)
   - Mounting full `~/.claude/` directory causes permission issues with plugin marketplace
 - **Current state**: Only `~/.claude/settings.json` is mounted (settings sync, but not plugin auth)
 - **Workaround**: Authenticate MCP plugins on host first, then use ClaudeBox (credentials don't transfer yet)
