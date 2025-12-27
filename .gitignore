@@ -3,6 +3,7 @@
 
 # Claude-specific files (project-specific, not to be committed)
 .claude/
+.claude/settings.local.json
 CLAUDE.md
 
 # Python
@@ -11,6 +12,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
 # Note: build/ directory contains Docker build files, not Python build
 # Python-specific build directories:
 develop-eggs/
@@ -72,3 +74,6 @@ backlog/
 # Generated installer
 claudebox.run.sh
 claudebox.run
+
+# VIM logs
+.nvimlog
