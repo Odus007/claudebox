@@ -461,6 +461,23 @@ claudebox clean --all
 claudebox
 ```
 
+### Terminal Setup (Shift+Enter for Multi-line)
+The `/terminal-setup` command in Claude Code cannot run inside ClaudeBox because it needs to configure your host terminal emulator, not the containerized environment.
+
+**Solution:** Configure your terminal on the host first:
+```bash
+# Run Claude Code directly on your host (outside ClaudeBox)
+claude
+
+# Inside Claude, run the terminal setup
+/terminal-setup
+
+# Now launch ClaudeBox - Shift+Enter will work
+claudebox
+```
+
+**Alternative:** You can always use `\` + Enter for multi-line input without any setup.
+
 ## 🎉 Acknowledgments
 
 - [Anthropic](https://www.anthropic.com/) for Claude AI
