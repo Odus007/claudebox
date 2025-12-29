@@ -234,6 +234,16 @@ run_claudebox_container() {
         docker_args+=(-v "$HOME/.claude/settings.json":/home/$DOCKER_USER/.claude/settings.json)
     fi
 
+    # Mount user's global agents directory (read-only overlay)
+    if [[ -d "$HOME/.claude/agents" ]]; then
+        docker_args+=(-v "$HOME/.claude/agents":/home/$DOCKER_USER/.claude/agents:ro)
+    fi
+
+    # Mount user's global commands directory (read-only overlay)
+    if [[ -d "$HOME/.claude/commands" ]]; then
+        docker_args+=(-v "$HOME/.claude/commands":/home/$DOCKER_USER/.claude/commands:ro)
+    fi
+
     # Mount .claude.json only if it already exists (from previous session)
     if [[ -f "$PROJECT_SLOT_DIR/.claude.json" ]]; then
         docker_args+=(-v "$PROJECT_SLOT_DIR/.claude.json":/home/$DOCKER_USER/.claude.json)

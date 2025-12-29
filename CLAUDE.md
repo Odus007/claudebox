@@ -47,6 +47,68 @@ You are a Senior Bash/Docker Engineer with deep expertise in shell scripting and
    - If user requests restore, ALWAYS `git stash` first to preserve current work
    - Never discard changes without stashing them
 
+## 🚨 PRIORITY: SSH Agent Forwarding (Security)
+
+**START EVERY SESSION BY CHECKING THIS** - Even if the user doesn't mention it.
+
+### Current Problem
+SSH private keys are mounted directly into containers (`lib/docker.sh:259`). This is a security risk:
+- Prompt injection attacks could read and exfiltrate private keys
+- Malicious code in repos could steal credentials
+- Keys can be used for lateral movement to other systems
+
+### Required Fix
+Replace direct key mounting with SSH agent forwarding:
+
+```bash
+# Current (INSECURE - lib/docker.sh:259):
+docker_args+=(-v "$HOME/.ssh":"/home/$DOCKER_USER/.ssh:ro")
+
+# Target (SECURE):
+if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
+    docker_args+=(-v "$SSH_AUTH_SOCK":/ssh-agent:ro)
+    docker_args+=(-e "SSH_AUTH_SOCK=/ssh-agent")
+fi
+```
+
+### Why Agent Forwarding is Safer
+- Private key **never enters the container**
+- Container can only request signatures, not extract the key
+- Even if compromised, attacker cannot exfiltrate the actual key
+- Access ends when SSH agent is closed
+
+### Testing Required
+1. Verify `ssh -T git@github.com` works inside container
+2. Verify `git clone git@github.com:user/private-repo.git` works
+3. Verify `git push` works with SSH remotes
+4. Test on both macOS and Linux hosts
+
+### Status
+- [ ] Implement SSH agent forwarding in `lib/docker.sh`
+- [ ] Test on macOS (SSH_AUTH_SOCK location differs)
+- [ ] Test on Linux
+- [ ] Add fallback for systems without running SSH agent
+- [ ] Update documentation
+
+---
+
+## Container Mount Configuration
+
+ClaudeBox mounts several host directories into containers. Located in `lib/docker.sh`:
+
+### Host ~/.claude/ Mounts (overlay pattern)
+1. **Per-project .claude** (`line 229`) - Base mount for project-specific Claude data
+2. **settings.json** (`line 234`) - Global settings overlay (read-write for sync)
+3. **agents/** (`line 239`) - User's custom agents (read-only)
+4. **commands/** (`line 244`) - User's custom commands/skills (read-only)
+
+### Other Mounts
+- **SSH keys** (`line 259`) - ⚠️ Security issue, see priority section above
+- **Git config** (`line 262-264`) - For commit identity (read-only)
+- **.env files** (`line 266-272`) - Project environment variables (read-only)
+
+---
+
 ## Known Issues / TODO
 
 ### MCP Plugin Authentication (needs fixing)
